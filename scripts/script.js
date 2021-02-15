@@ -1,4 +1,4 @@
-const host = "http://localhost:8080";
+const host = "https://victor-ades-ca2.herokuapp.com";
 var numberOfQueues = 0;
 var numberOfForms = 0;
 
@@ -234,7 +234,7 @@ function drawChart(chartId, selectedOption) {
     timeNow.setHours(timeNow.getHours() + 8);
     var timestamp = timeNow.toISOString().slice(0, 19);
     var jsonData = $.ajax({
-        url: `http://localhost:8080/company/arrival_rate?queue_id=${selectedOption}&from=${timestamp}%2B08:00&duration=3`,
+        url: `${host}/company/arrival_rate?queue_id=${selectedOption}&from=${timestamp}%2B08:00&duration=3`,
         dataType: "json",
     }).done(function (jsonData) {
         // Create our data table out of JSON data loaded from server.
