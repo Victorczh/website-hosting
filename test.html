@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!--Load the AJAX API-->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js'></script>
+  <script type="text/javascript">
+    // Load the Visualization API and the piechart package.
+    google.charts.load('current', {'packages':['corechart', 'line']});
+      
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+      var time = new Date().getTime()
+      time = time - (60000*3)
+      var timenow = new Date(time)
+      timenow.setHours(timenow.getHours() +8)
+      var timestamp = timenow.toISOString().slice(0,19)
+      var jsonData = $.ajax({
+          url: `http://localhost:8080/company/arrival_rate?queue_id=QUEUE01002&from=${timestamp}%2B08:00&duration=3`,
+          dataType: "json",
+          async: false
+          }).responseText;
+      jsonData = JSON.parse(jsonData)
+      // Create our data table out of JSON data loaded from server.
+      var data = new google.visualization.DataTable();
+      data.addColumn('datetime','timestamp');
+      data.addColumn('number','count');
+      for(i=0;i < jsonData.length;i++){
+        data.addRows([
+          [new Date(time+(i*1000)),Number(jsonData[i].count)],
+        ])
+      }
+      var options = {
+        title: 'Arrival Rate',
+        vAxis: {
+          viewWindow: {
+            min: 0,
+          },
+          minValue: 0,
+        },
+        hAxis: {
+        },
+        width: 400,
+        height: 240,
+      }
+      console.log(data)
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+  }
+</script>
+</head>
+<body>
+  <div id="chart_div"></div>
+</body>
+</html>
