@@ -1,4 +1,4 @@
-const host = "https://victor-ades-ca2.herokuapp.com";
+const host = "https://ades-2b03.herokuapp.com";
 var numberOfQueues = 0;
 var numberOfForms = 0;
 
